@@ -19,9 +19,11 @@ Turn any photo into stunning artwork with one click.
 ## Project Structure
 ```text
 visionart-studio/
+├── main.py                 # Application Entry Point
+├── config.py               # Configurations and Constants
 ├── .gitignore
 ├── pyproject.toml
-└── README.md               # This file
+└── README.md
 ```
 
 
