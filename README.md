@@ -21,6 +21,12 @@ Turn any photo into stunning artwork with one click.
 visionart-studio/
 ├── main.py                 # Application Entry Point
 ├── config.py               # Configurations and Constants
+├── core/                   # Core Logic
+│   ├── __init__.py
+│   ├── image_processor.py  # Image processing class 
+│   ├── effects/
+│   ├── 
+│   ├── 
 ├── .gitignore
 ├── pyproject.toml
 └── README.md
