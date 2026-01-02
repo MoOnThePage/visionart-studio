@@ -24,7 +24,9 @@ visionart-studio/
 ├── core/                   # Core Logic
 │   ├── __init__.py
 │   ├── image_processor.py  # Image processing class 
-│   ├── effects/
+│   ├── effects/            # effects modules
+│   │   ├── __init__.py
+│   │   ├── cartoon.py
 │   ├── 
 │   ├── 
 ├── .gitignore
