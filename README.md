@@ -27,6 +27,7 @@ visionart-studio/
 │   ├── effects/            # effects modules
 │   │   ├── __init__.py
 │   │   ├── cartoon.py
+│   │   ├── oil_painting.py
 │   ├── 
 │   ├── 
 ├── .gitignore
