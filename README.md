@@ -28,6 +28,8 @@ visionart-studio/
 │   │   ├── __init__.py
 │   │   ├── cartoon.py
 │   │   ├── oil_painting.py
+│   │   ├── pencil_sketch.py
+│   │   └── upscaler.py
 │   ├── 
 │   ├── 
 ├── .gitignore
