@@ -30,8 +30,10 @@ visionart-studio/
 │   │   ├── oil_painting.py
 │   │   ├── pencil_sketch.py
 │   │   └── upscaler.py
-│   ├── 
-│   ├── 
+│   └── utils/              # Utility functions
+│       ├── __init__.py
+│       ├── file_handlers.py
+│       └── image_utils.py
 ├── .gitignore
 ├── pyproject.toml
 └── README.md
