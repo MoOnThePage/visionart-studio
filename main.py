@@ -1,17 +1,24 @@
 import streamlit as st
 import cv2
 import numpy as np
-from PIL import Image
-import io
+from pathlib import Path
+import sys
 
-st.title("VisonArt Studio")
-st.subheader("Turn your photos into masterpieces in seconds")
-st.divider()
+# modules
+from ui.components import header#, before_after_comparison
+
 
 # Global variables
 image = None
 processed_image = None
 effect = None
+
+def main():
+    # Header
+    header()
+
+if __name__ == "__main__":
+    main()
 
 # File uploading Function
 uploaded_file = st.file_uploader("Upload your photo", type=["jpg", "png", "jpeg"])
