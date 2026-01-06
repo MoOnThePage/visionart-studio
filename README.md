@@ -34,6 +34,9 @@ visionart-studio/
 │       ├── __init__.py
 │       ├── file_handlers.py
 │       └── image_utils.py
+├── ui/                     # User interface components
+│   ├── __init__.py
+│   ├── components.py
 ├── .gitignore
 ├── pyproject.toml
 └── README.md
