@@ -39,6 +39,9 @@ visionart-studio/
 │   ├── components.py
 │   ├── layout.py
 │   └── sidebar.py
+├── services/                # External services (maybe)
+│   ├── __init__.py
+│   └── analytics.py
 ├── .gitignore
 ├── pyproject.toml
 └── README.md
