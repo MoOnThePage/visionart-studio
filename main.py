@@ -6,6 +6,7 @@ import sys
 
 # modules
 from ui.components import header, before_after_comparison
+from ui.sidebar import app_sidebar
 
 
 # Global variables
@@ -19,6 +20,9 @@ def main():
 
     # Comparison
     # before_after_comparison()
+
+    # Sidebar
+    # app_sidebar()
 
 if __name__ == "__main__":
     main()
