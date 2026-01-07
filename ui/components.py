@@ -66,3 +66,43 @@ def effect_selector(effect: Dict[str, Any]) -> str:
 
     return selected_effect
 
+def image_uploader() -> tuple:
+    """Image uploader component"""
+    st.subheader("upload an Image")
+
+    col1, col2, = st.columns(2)
+
+    with col1:
+        upload_method = st.radio(
+            "Upload method:",
+            ["File Upload", "Camera", "URL"]
+        )
+
+    with col2:
+        if upload_method == "File Upload":
+            uploaded_file = st.file_uploader(
+                "Choose an image...",
+                type = ["jpg", "jpeg", "png"],
+                label_visibility="collapsed"
+            )
+            return uploaded_file, None
+        elif upload_method == "Camera":
+            camera_image = st.camera_input("Take a picture")
+            return camera_image, None
+        else: # URL
+            image_url = st.text_input("Image URL")
+            return None, image_url
+
+    return None, None
+
+def before_after_comparison(original, processed, effect_name: str):
+    """Side-by-side comparison component"""
+    st.subheader("Before & After")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.image(original, caption="original image", use_column_width=True)
+
+    with col2:
+        st.image(processed, caption=f"{effect_name}", use_column_width=True)

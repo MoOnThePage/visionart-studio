@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 
 # modules
-from ui.components import header#, before_after_comparison
+from ui.components import header, before_after_comparison
 
 
 # Global variables
@@ -16,6 +16,9 @@ effect = None
 def main():
     # Header
     header()
+
+    # Comparison
+    # before_after_comparison()
 
 if __name__ == "__main__":
     main()
