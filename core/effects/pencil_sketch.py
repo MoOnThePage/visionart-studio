@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from core.image_processor import BaseEffect
-from main import inverted_blurred
+# from main import inverted_blurred
 
 
 class PencilSketchEffect(BaseEffect):

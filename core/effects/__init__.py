@@ -10,7 +10,7 @@ def create_effect(effect_name: str):
         'cartoon': CartoonEffect,
         'oil_painting': OilPaintingEffect,
         'pencil_sketch': PencilSketchEffect,
-        'upscaler': UpscalerEffect,
+        'upscale': UpscalerEffect,
     }
 
     effect_class = effect.get(effect_name)

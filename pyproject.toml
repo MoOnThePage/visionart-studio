@@ -1,6 +1,6 @@
 [project]
 name = "visionart-studio"
-version = "0.1.0"
+version = "1.0.0"
 description = "Turn any photo into stunning artwork with one click."
 requires-python = ">=3.11"
 dependencies = [

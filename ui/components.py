@@ -5,7 +5,7 @@ def header():
     """Main app header"""
     st.set_page_config(
         page_title="VisionArt Studio",
-        page_icon="🏼",
+        page_icon="🔻",
         layout="wide",
     )
 
@@ -33,13 +33,13 @@ def header():
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.title("🏼 VisionArt Studio")
+        st.title("🔻 VisionArt Studio")
         st.markdown("### AI-Powered Image Transformation Platform")
         st.markdown("---")
 
 def effect_selector(effect: Dict[str, Any]) -> str:
     """Effect selection component"""
-    st.subheader("🏼 Choose Effect")
+    st.subheader("🔻 Choose Effect")
 
     # Create two columns for effect cards
     cols = st.columns(2)

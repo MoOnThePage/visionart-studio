@@ -4,99 +4,132 @@ import numpy as np
 from pathlib import Path
 import sys
 
+# Add project root to path
+project_root = Path(__file__).parent
+sys.path.append(str(project_root))
+
 # modules
-from ui.components import header, before_after_comparison
+from config import EFFECTS, SUPPORTED_EXTENSIONS
+from core.image_processor import ImageProcessor
+from core.effects import create_effect
+from core.utils.image_utils import bytes_to_image, image_to_bytes, resize_image
+
 from ui.sidebar import app_sidebar
+from ui.components import header, before_after_comparison
 
+from services.analytics import Analytics
 
-# Global variables
-image = None
-processed_image = None
-effect = None
+def initialize_processor() -> ImageProcessor:
+    """Initialize the image processor with all effects"""
+    processor = ImageProcessor()
+
+    # Register all effects
+    for effect_name in EFFECTS.keys():
+        effect = create_effect(effect_name)
+        processor.register_effect(effect_name, effect)
+
+    return processor
 
 def main():
-    # Header
+    """Main application function"""
+
+    # Initialize
+    processor = initialize_processor()
+    analytics = Analytics()
+
+    # Page Header
     header()
 
-    # Comparison
-    # before_after_comparison()
+    # Sidebar for settings
+    settings = app_sidebar(EFFECTS)
+    selected_effect = settings["effect"]
 
-    # Sidebar
-    # app_sidebar()
+    # Track usage
+    analytics.log_usage(
+        "effect_selected", {
+            "effect": selected_effect,
+            "settings": settings
+        }
+    )
+    analytics.increment_stat(f"effect_{selected_effect}_selected")
+
+    # File upload section
+    st.subheader("Upload image")
+
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        uploaded_file = st.file_uploader(
+            "Choose an image...",
+            type = SUPPORTED_EXTENSIONS,
+            label_visibility="collapsed"
+        )
+
+    with col2:
+        if uploaded_file:
+            file_size = len(uploaded_file.getvalue()) / 1024 / 1024 #MB
+            st.info(f"File size: {file_size:.2f} MB")
+
+    # Main processing section
+    if uploaded_file:
+        try:
+            # convert to image
+            file_bytes = uploaded_file.getvalue()
+            original_image = bytes_to_image(file_bytes)
+
+            # Resize if too large
+            original_image = resize_image(original_image)
+
+            # Create columns for comparison
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.image(original_image, caption="Original Image", use_column_width=True)
+
+            # process button
+            if st.button("🪄 Apply Effect", type="primary", use_container_width=True):
+                with st.spinner(f"Magic Spell{EFFECTS[selected_effect]['name']}..."):
+                    # Apply effect
+                    processed_image = processor.process(
+                        selected_effect,
+                        original_image,
+                        **{k: v for k, v in settings.items() if k != "effect"}
+                    )
+
+                    # Show result
+                    with col2:
+                        st.image(
+                            processed_image,
+                            caption=f"{EFFECTS[selected_effect]['name']}",
+                            use_column_width=True
+                        )
+
+                    # Download button
+                    processed_bytes = image_to_bytes(processed_image)
+
+                    st.download_button(
+                        label="🔻 Download Result",
+                        data=processed_bytes,
+                        file_name=f"visionart_{selected_effect}.png",
+                        mime="image/jpeg",
+                        use_container_width=True
+                    )
+
+                    # Track successful processing
+                    analytics.increment_stat("images_processed")
+                    st.success("Effect successfully applied!")
+        except Exception as e:
+            st.error(f"Error processing image: {str(e)}")
+            st.info("Please try a different image or adjust the settings")
+
+    # Footer
+    st.markdown("---")
+    st.markdown("""
+        <div style="text-align: center;">
+        <p>🔻 <b>VisionArt Studio</b> - Part of VisionWorks Ecosystem</p>
+        <p>Built with 🎔 using OpenCV & Streamlit</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
-
-# File uploading Function
-uploaded_file = st.file_uploader("Upload your photo", type=["jpg", "png", "jpeg"])
-if uploaded_file:
-    # Read the image
-    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
-    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-
-    # Display the images
-    col1, col2 = st.columns(2)
-
-    # Show the original image
-    with col1:
-        image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        st.image(image_bgr, caption = "Original Image", width = "content")
-
-    # Effect selection
-    effect = st.radio("Choose effect:", ["Cartoon", "Oil Painting", "Pencil Sketch", "Upscale 2X"])
-
-    # Show the edited image
-    with col2:
-        if effect == "Cartoon":
-            # Cartoon effect
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            gray = cv2.medianBlur(gray, 5)
-            edges = cv2.adaptiveThreshold(
-                gray,
-                255,
-                cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                cv2.THRESH_BINARY,9,9
-            )
-            color = cv2.bilateralFilter(image, 9, 300, 300)
-            processed_image = cv2.bitwise_and(color, color, mask = edges)
-            processed_image_rgb = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
-            st.image(processed_image_rgb, caption = "Cartoon Effect", width = "content")
-
-        elif effect == "Oil Painting":
-            # Oil Painting effecting
-            processed_image = cv2.xphoto.oilPainting(image, 7, 1)
-            processed_image_rgb = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
-            st.image(processed_image_rgb, caption = "Oil Painting Effect", width = "content")
-
-        elif effect == "Pencil Sketch":
-            # Pencil sketch
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            invert = cv2.bitwise_not(gray)
-            blurred = cv2.GaussianBlur(invert, (21, 21), 0)
-            inverted_blurred = cv2.bitwise_not(blurred)
-            processed_image = cv2.divide(gray, inverted_blurred, scale = 256.0)
-            processed_image_rgb = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
-            st.image(processed_image_rgb, caption = "Pencil Sketch Effect", width = "content")
-
-        elif effect == "Upscale 2X":
-            # Simple upscale (OpenCV)
-            height, width = image.shape[:2]
-            processed_image = cv2.resize(image, (width * 2, height * 2), interpolation = cv2.INTER_CUBIC)
-            processed_image_rgb = cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB)
-            st.image(processed_image_rgb, caption = "Upscale 2X Effect", width = "content")
-
-# Download
-if processed_image is not None and effect is not None:
-    image_to_download = processed_image if processed_image is not None else image
-
-    if len(image_to_download) == 2:
-        image_to_download = cv2.cvtColor(image_to_download, cv2.COLOR_GRAY2BGR)
-
-    _, encoded_image = cv2.imencode(".jpg", image_to_download)
-
-    st.download_button(
-        label = "Download",
-        data = encoded_image.tobytes(),
-        file_name = f"visionart_{effect.lower().replace(' ', '_')}.jpg",
-        mime = "image/jpeg",
-    )
