@@ -1,5 +1,5 @@
 # Visionart Studio
-Turn any photo into stunning artwork with one click.
+AI-Powered Image Transformation Platform.
 
 ## Features
 - **Cartoon Effect**: Transform photos into cartoons
