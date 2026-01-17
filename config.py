@@ -3,9 +3,9 @@ from pathlib import Path
 
 # Paths
 BASE_DIR = Path(__file__).parent
-STATIC_DIR = BASE_DIR / "static"
-UPLOAD_DIR = STATIC_DIR / "uploads"
-UPLOAD_DIR.mkdir(exist_ok = True)
+# STATIC_DIR = BASE_DIR / "static"
+# UPLOAD_DIR = STATIC_DIR / "uploads"
+# UPLOAD_DIR.mkdir(exist_ok = True)
 
 # App Config
 APP_NAME = "VisionArt Studio"
